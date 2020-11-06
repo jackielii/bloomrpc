@@ -208,10 +208,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-bloomrpc-mock@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/bloomrpc-mock/-/bloomrpc-mock-0.3.1.tgz#2842e913aa03ba6ae4ec6d8e002af5f3edbc5469"
-  integrity sha512-cnb9Ebs6kwW3PCFOsKYRCiuzUQKacQm10FqCAInzVTpMFCKDTeXm8oPCYhGxAETz9Pli0HTIMnVbDataW/zDLQ==
+bloomrpc-mock-tes@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.npmjs.org/bloomrpc-mock-tes/-/bloomrpc-mock-tes-0.3.2.tgz#c49eb0102cf2390fbfff1fc6421f7546f8cfde2c"
+  integrity sha512-Gs43xPwAzb4YuZ2wRSjWdcqGEs/lP6nv83E/IfHMV4cmTyq0xk0efGNVvIUmdISXoYfDfo2tF8Uv/5Fd9Vsi4w==
   dependencies:
     "@grpc/proto-loader" "^0.4.0"
     "@oclif/command" "^1"
