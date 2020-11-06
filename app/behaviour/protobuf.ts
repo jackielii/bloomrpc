@@ -1,18 +1,18 @@
-import { Proto, ServiceMethodsPayload } from 'bloomrpc-mock';
+import { Proto, ServiceMethodsPayload } from 'bloomrpc-mock'
 
 export interface ProtoFile {
-  proto: Proto,
+  proto: Proto
   fileName: string
-  services: ProtoServiceList;
+  services: ProtoServiceList
 }
 
 export interface ProtoServiceList {
-  [key: string]: ProtoService,
+  [key: string]: ProtoService
 }
 
 export interface ProtoService {
-  proto: Proto,
-  serviceName: string,
-  methodsMocks: ServiceMethodsPayload,
-  methodsName: string[],
+  proto: Proto
+  serviceName: string
+  methodsMocks: ServiceMethodsPayload
+  methodsName: string[]
 }

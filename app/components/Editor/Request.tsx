@@ -1,9 +1,9 @@
-import * as React from 'react';
-import AceEditor, { Command } from 'react-ace';
+import * as React from 'react'
+import AceEditor, { Command } from 'react-ace'
 import * as Mousetrap from 'mousetrap'
-import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
-import { Tabs } from 'antd';
-import { Viewer } from './Viewer';
+import 'mousetrap/plugins/global-bind/mousetrap-global-bind'
+import { Tabs } from 'antd'
+import { Viewer } from './Viewer'
 
 interface RequestProps {
   data: string
@@ -13,8 +13,8 @@ interface RequestProps {
   active?: boolean
 }
 
-export function Request({onChangeData, commands, data, streamData, active}: RequestProps) {
-  const editorTabKey = `editorTab`;
+export function Request({ onChangeData, commands, data, streamData, active }: RequestProps) {
+  const editorTabKey = `editorTab`
 
   // bind esc for focus on the active editor window
   const aceEditor = React.useRef<AceEditor>(null)
@@ -31,17 +31,13 @@ export function Request({onChangeData, commands, data, streamData, active}: Requ
 
   return (
     <>
-      <Tabs
-        defaultActiveKey={editorTabKey}
-        tabPosition={"top"}
-        style={{width: "100%"}}
-      >
+      <Tabs defaultActiveKey={editorTabKey} tabPosition={'top'} style={{ width: '100%' }}>
         <Tabs.TabPane tab="Editor" key={editorTabKey}>
           <AceEditor
             ref={aceEditor}
-            style={{ background: "#fff" }}
-            width={"100%"}
-            height={"calc(100vh - 185px)"}
+            style={{ background: '#fff' }}
+            width={'100%'}
+            height={'calc(100vh - 185px)'}
             mode="json"
             theme="textmate"
             name="inputs"
@@ -55,7 +51,7 @@ export function Request({onChangeData, commands, data, streamData, active}: Requ
             value={data}
             setOptions={{
               useWorker: true,
-              displayIndentGuides: true
+              displayIndentGuides: true,
             }}
             tabSize={2}
           />

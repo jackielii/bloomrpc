@@ -1,13 +1,13 @@
-import { remote } from 'electron';
-import { fromFileName, mockRequestMethods, Proto, walkServices } from 'bloomrpc-mock';
-import * as path from "path";
-import { ProtoFile, ProtoService } from './protobuf';
-import { Service } from 'protobufjs';
+import { remote } from 'electron'
+import { fromFileName, mockRequestMethods, Proto, walkServices } from 'bloomrpc-mock'
+import * as path from 'path'
+import { ProtoFile, ProtoService } from './protobuf'
+import { Service } from 'protobufjs'
 
 const commonProtosPath = [
   // @ts-ignore
   path.join(__static),
-];
+]
 
 export type OnProtoUpload = (protoFiles: ProtoFile[], err?: Error) => void
 
@@ -17,18 +17,18 @@ export type OnProtoUpload = (protoFiles: ProtoFile[], err?: Error) => void
  * @param importPaths
  */
 export function importProtos(onProtoUploaded: OnProtoUpload, importPaths?: string[]) {
-
-  remote.dialog.showOpenDialog({
-    properties: ['openFile', 'multiSelections'],
-    filters: [
-      { name: 'Protos', extensions: ['proto'] },
-    ]
-  }, async (filePaths: string[]) => {
-    if (!filePaths) {
-      return;
-    }
-    await loadProtos(filePaths, importPaths, onProtoUploaded);
-  });
+  remote.dialog.showOpenDialog(
+    {
+      properties: ['openFile', 'multiSelections'],
+      filters: [{ name: 'Protos', extensions: ['proto'] }],
+    },
+    async (filePaths: string[]) => {
+      if (!filePaths) {
+        return
+      }
+      await loadProtos(filePaths, importPaths, onProtoUploaded)
+    },
+  )
 }
 
 /**
@@ -37,41 +37,42 @@ export function importProtos(onProtoUploaded: OnProtoUpload, importPaths?: strin
  * @param importPaths
  * @param onProtoUploaded
  */
-export async function loadProtos(filePaths: string[], importPaths?: string[], onProtoUploaded?: OnProtoUpload): Promise<ProtoFile[]> {
+export async function loadProtos(
+  filePaths: string[],
+  importPaths?: string[],
+  onProtoUploaded?: OnProtoUpload,
+): Promise<ProtoFile[]> {
   try {
-    const protos = await Promise.all(filePaths.map((fileName) =>
-      fromFileName(fileName, [
-        ...(importPaths ? importPaths : []),
-        ...commonProtosPath,
-      ])
-    ));
+    const protos = await Promise.all(
+      filePaths.map(fileName =>
+        fromFileName(fileName, [...(importPaths ? importPaths : []), ...commonProtosPath]),
+      ),
+    )
 
     const protoList = protos.reduce((list: ProtoFile[], proto: Proto) => {
-
       // Services with methods
-      const services = parseServices(proto);
+      const services = parseServices(proto)
 
       // Proto file
       list.push({
         proto,
-        fileName: proto.fileName.split(path.sep).pop() || "",
+        fileName: proto.fileName.split(path.sep).pop() || '',
         services,
-      });
+      })
 
-      return list;
-    }, []);
-    onProtoUploaded && onProtoUploaded(protoList, undefined);
-    return protoList;
-
+      return list
+    }, [])
+    onProtoUploaded && onProtoUploaded(protoList, undefined)
+    return protoList
   } catch (e) {
-    console.error(e);
-    onProtoUploaded && onProtoUploaded([], e);
+    console.error(e)
+    onProtoUploaded && onProtoUploaded([], e)
 
     if (!onProtoUploaded) {
-      throw e;
+      throw e
     }
 
-    return [];
+    return []
   }
 }
 
@@ -80,33 +81,34 @@ export async function loadProtos(filePaths: string[], importPaths?: string[], on
  * @param proto
  */
 function parseServices(proto: Proto) {
-
-  const services: {[key: string]: ProtoService} = {};
+  const services: { [key: string]: ProtoService } = {}
 
   walkServices(proto, (service: Service, _: any, serviceName: string) => {
-    const mocks = mockRequestMethods(service);
+    const mocks = mockRequestMethods(service)
     services[serviceName] = {
       serviceName: serviceName,
       proto,
       methodsMocks: mocks,
       methodsName: Object.keys(mocks),
-    };
-  });
+    }
+  })
 
-  return services;
+  return services
 }
 
 export function importResolvePath(): Promise<string> {
   return new Promise((resolve, reject) => {
-    remote.dialog.showOpenDialog({
-      properties: ['openDirectory'],
-      filters: []
-    }, (filePaths: string[]) => {
-      if (!filePaths) {
-        return reject("No folder selected");
-      }
-      resolve(filePaths[0]);
-    });
+    remote.dialog.showOpenDialog(
+      {
+        properties: ['openDirectory'],
+        filters: [],
+      },
+      (filePaths: string[]) => {
+        if (!filePaths) {
+          return reject('No folder selected')
+        }
+        resolve(filePaths[0])
+      },
+    )
   })
-
 }

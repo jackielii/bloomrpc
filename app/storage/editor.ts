@@ -1,36 +1,36 @@
 // @ts-ignore
-import * as Store from 'electron-store';
-import { ProtoFile } from '../behaviour';
-import { EditorTabs } from '../components/BloomRPC';
-import { EditorRequest } from '../components/Editor';
-import { EditorTabRequest } from "../components/TabList";
+import * as Store from 'electron-store'
+import { ProtoFile } from '../behaviour'
+import { EditorTabs } from '../components/BloomRPC'
+import { EditorRequest } from '../components/Editor'
+import { EditorTabRequest } from '../components/TabList'
 
 const EditorStore = new Store({
-  name: "editor",
-});
+  name: 'editor',
+})
 
 const KEYS = {
-  URL: "url",
-  PROTOS: "protos",
-  TABS: "tabs",
-  REQUESTS: "requests",
-  INTERACTIVE: "interactive",
-  METADATA: "metadata",
-};
+  URL: 'url',
+  PROTOS: 'protos',
+  TABS: 'tabs',
+  REQUESTS: 'requests',
+  INTERACTIVE: 'interactive',
+  METADATA: 'metadata',
+}
 
 /**
  * Store URL
  * @param url
  */
 export function storeUrl(url: string) {
-  EditorStore.set(KEYS.URL, url);
+  EditorStore.set(KEYS.URL, url)
 }
 
 /**
  * Get URL
  */
 export function getUrl(): string | void {
-  return EditorStore.get(KEYS.URL);
+  return EditorStore.get(KEYS.URL)
 }
 
 /**
@@ -38,14 +38,14 @@ export function getUrl(): string | void {
  * @param protos
  */
 export function storeProtos(protos: ProtoFile[]) {
-  EditorStore.set(KEYS.PROTOS, protos.map(proto => proto.proto.filePath));
+  EditorStore.set(KEYS.PROTOS, protos.map(proto => proto.proto.filePath))
 }
 
 /**
  * Get proto list
  */
 export function getProtos(): string[] | void {
-  return EditorStore.get(KEYS.PROTOS);
+  return EditorStore.get(KEYS.PROTOS)
 }
 
 /**
@@ -55,20 +55,22 @@ export function getProtos(): string[] | void {
 export function storeTabs(editorTabs: EditorTabs) {
   EditorStore.set(KEYS.TABS, {
     activeKey: editorTabs.activeKey,
-    tabs: editorTabs.tabs.map((tab) => ({
+    tabs: editorTabs.tabs.map(tab => ({
       methodName: tab.methodName,
       serviceName: tab.service.serviceName,
       protoPath: tab.service.proto.filePath,
+      tabKey: tab.tabKey,
     })),
   })
 }
 
 export interface EditorTabsStorage {
-  activeKey: string,
+  activeKey: string
   tabs: {
-    protoPath: string,
-    methodName: string,
-    serviceName: string,
+    protoPath: string
+    methodName: string
+    serviceName: string
+    tabKey: string
   }[]
 }
 
@@ -76,7 +78,7 @@ export interface EditorTabsStorage {
  * Get tabs
  */
 export function getTabs(): EditorTabsStorage | void {
-  return EditorStore.get(KEYS.TABS);
+  return EditorStore.get(KEYS.TABS)
 }
 
 interface TabRequestInfo extends EditorRequest {
@@ -93,7 +95,17 @@ interface TabRequestInfo extends EditorRequest {
  * @param interactive
  * @param tlsCertificate
  */
-export function storeRequestInfo({id, url, data, inputs, metadata, interactive, tlsCertificate, environment, grpcWeb}: EditorTabRequest) {
+export function storeRequestInfo({
+  id,
+  url,
+  data,
+  inputs,
+  metadata,
+  interactive,
+  tlsCertificate,
+  environment,
+  grpcWeb,
+}: EditorTabRequest) {
   const request = {
     id,
     url,
@@ -104,20 +116,21 @@ export function storeRequestInfo({id, url, data, inputs, metadata, interactive, 
     environment,
     grpcWeb,
     createdAt: new Date().toISOString(),
-  };
+  }
 
-  const requestList = EditorStore.get('requests', [])
-    .filter((requestItem: TabRequestInfo) => requestItem.id !== id);
+  const requestList = EditorStore.get('requests', []).filter(
+    (requestItem: TabRequestInfo) => requestItem.id !== id,
+  )
 
-  EditorStore.set(KEYS.REQUESTS, [...requestList, request]);
+  EditorStore.set(KEYS.REQUESTS, [...requestList, request])
 }
 
 export function storeMetadata(metadata: string) {
-  EditorStore.set(KEYS.METADATA, metadata);
+  EditorStore.set(KEYS.METADATA, metadata)
 }
 
 export function getMetadata() {
-  return EditorStore.get(KEYS.METADATA);
+  return EditorStore.get(KEYS.METADATA)
 }
 
 /**
@@ -125,8 +138,8 @@ export function getMetadata() {
  * @param tabKey
  */
 export function getRequestInfo(tabKey: string): EditorRequest | undefined {
-  const requests = EditorStore.get(KEYS.REQUESTS, []);
-  return requests.find((request: TabRequestInfo) => request.id === tabKey);
+  const requests = EditorStore.get(KEYS.REQUESTS, [])
+  return requests.find((request: TabRequestInfo) => request.id === tabKey)
 }
 
 /**
@@ -134,16 +147,15 @@ export function getRequestInfo(tabKey: string): EditorRequest | undefined {
  * @param tabKey
  */
 export function deleteRequestInfo(tabKey: string) {
-  const requests = EditorStore.get(KEYS.REQUESTS, [])
-    .filter((requestItem: TabRequestInfo) => requestItem.id !== tabKey);
+  const requests = EditorStore.get(KEYS.REQUESTS, []).filter(
+    (requestItem: TabRequestInfo) => requestItem.id !== tabKey,
+  )
 
-  EditorStore.set('requests', requests);
+  EditorStore.set('requests', requests)
 }
 
 export function clearEditor() {
-  EditorStore.clear();
+  EditorStore.clear()
 }
 
-export { EditorStore };
-
-
+export { EditorStore }
